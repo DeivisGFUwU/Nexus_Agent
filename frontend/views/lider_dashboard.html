@@ -216,6 +216,7 @@
                 texts.forEach(el => el.classList.remove('hidden'));
             }
         }
+        
         function mostrarToast(titulo, mensaje) {
             const toast = document.getElementById('toast');
             toast.querySelector('p.font-bold').innerText = titulo;
@@ -225,6 +226,7 @@
             setTimeout(() => toast.style.transform = "translateY(0)", 150);
             setTimeout(() => { toast.classList.add('translate-y-[150%]', 'opacity-0'); }, 3000);
         }
+
     </script>
     <script src="js/lider_controller.js"></script>
 </body>
