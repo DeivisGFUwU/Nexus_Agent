@@ -23,8 +23,8 @@ const MiembroController = {
             this.cargarTelemetriaHistorica()
         ]);
         
-        // Activamos el radar de eventos en vivo
-        this.simularWebhookRealTime();
+        // Reemplaza this.simularWebhookRealTime(); por esto:
+        this.iniciarRadarTermodinamico();
     },
 
     cargarPerfil() {
@@ -38,7 +38,7 @@ const MiembroController = {
     // 1. PETICIÓN REAL: Consumo de la IA Gemini
     async cargarMensajeProactivo() {
         const contenedorMensaje = document.getElementById('mensaje-onboarding');
-        const userId = DevAPI.getCurrentUser();
+        const teamId = DevAPI.getCurrentTeam(); // <--- Usamos el teamId
 
         console.log(`📡 [GET] ${DevAPI.BASE_URL}/onboarding/${userId} - Solicitando contexto a la IA...`);
 
@@ -142,19 +142,17 @@ const MiembroController = {
         }
     },
 
-    // Simula la recepción de un Webhook desde FastAPI a través de un WebSocket
-    simularWebhookRealTime() {
-        setTimeout(() => {
-            console.log("⚡ ¡Pulso en tiempo real detectado desde el repositorio de GitHub!");
-            const eventoEnVivo = {
-                tiempo: 'Ahora mismo',
-                origen: 'GitHub',
-                evento: 'Commit: Integración de la pasarela de consumo Fetch API',
-                autor: '@maycol.dev',
-                color: 'emerald'
-            };
-            this.inyectarFila(eventoEnVivo, true);
-        }, 5000);
+    // El nuevo Radar Termodinámico que hace sondeos a la BD real
+    iniciarRadarTermodinamico() {
+        console.log("⚡ [Radar] Iniciando escaneo de la matriz cada 10 segundos...");
+        
+        setInterval(() => {
+            // Actualiza la tabla silenciosamente buscando nuevos eventos del webhook
+            this.cargarTelemetriaHistorica();
+            
+            // Nota opcional: Podríamos llamar a cargarMensajeProactivo() aquí también
+            // pero consumiríamos mucha API de Gemini. Mejor solo actualizar la tabla por ahora.
+        }, 10000); // 10,000 milisegundos = 10 segundos
     }
 };
 
