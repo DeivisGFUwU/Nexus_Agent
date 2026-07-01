@@ -66,7 +66,7 @@ async def recibir_webhook_github(request: Request):
                 autor = commit["author"].get("username", commit["author"].get("name", "Desconocido"))
                 
                 # Usamos el team_id quemado temporalmente para el MVP
-                team_id_mvp = "52fc060f-563c-481c-ab83-0e0cd1d3c9f2" 
+                team_id_mvp = "262e7ed8-d179-4b60-948a-3d9097a8f40c" 
                 
                 datos_evento = {
                     "team_id": team_id_mvp,
@@ -84,3 +84,4 @@ async def recibir_webhook_github(request: Request):
     except Exception as e:
         print(f"❌ [Webhook] Fallo en recepción: {e}")
         return {"status": "Error", "detail": str(e)}
+    

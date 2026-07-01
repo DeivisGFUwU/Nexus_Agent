@@ -7,7 +7,7 @@ const DevAPI = {
     // La dirección termodinámica de tu servidor FastAPI
     BASE_URL: 'http://localhost:8000/api/v1/dev',
     // Simulamos la obtención de parámetros del usuario logueado
-    getCurrentTeam: () => '52fc060f-563c-481c-ab83-0e0cd1d3c9f2',
+    getCurrentTeam: () => '262e7ed8-d179-4b60-948a-3d9097a8f40c',
     getCurrentUser: () => 'dev-01'
 };
 
