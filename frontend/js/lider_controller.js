@@ -6,7 +6,7 @@
 const LiderAPI = {
     BASE_URL: 'http://localhost:8000/api/v1/leader',
     // Simulamos la obtención del ID de equipo desde el JWT del usuario
-    getTeamId: () => '25de8a3a-08dc-49a7-b93c-63096581b853' 
+    getTeamId: () => '262e7ed8-d179-4b60-948a-3d9097a8f40c' 
 };
 
 const LiderController = {

@@ -110,19 +110,26 @@ const MiembroController = {
         let tipoEvento = partesEvento[0];
         let descripcionEvento = partesEvento.slice(1).join(':') || '';
 
+        // El HTML inyectado ahora tiene un contenedor interactivo (onclick) y límites de ancho (max-w)
         const filaHtml = `
             <tr class="${esNueva ? 'bg-emerald-50 dark:bg-lime/5 transition-colors duration-1000 fade-in' : 'hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition'}">
-                <td class="px-6 py-4 text-slate-500 dark:text-zinc-500">${ev.tiempo}</td>
-                <td class="px-6 py-4">
+                <td class="px-6 py-4 text-slate-500 dark:text-zinc-500 whitespace-nowrap">${ev.tiempo}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
                     <span class="px-2 py-1.5 rounded text-xs font-bold border flex items-center gap-2 w-max ${bgClass}">
                         <i class="${icono}"></i> ${ev.origen}
                     </span>
                 </td>
-                <td class="px-6 py-4 text-slate-700 dark:text-zinc-300 font-medium">
-                    <span class="font-bold ${ev.color === 'emerald' ? 'text-emerald-600 dark:text-lime' : 'text-blue-600 dark:text-cyan'}">${tipoEvento}${descripcionEvento ? ':' : ''}</span> 
-                    ${descripcionEvento}
+                <td class="px-6 py-4 text-slate-700 dark:text-zinc-300 font-medium max-w-[200px] md:max-w-sm lg:max-w-md w-full">
+                    <div class="truncate cursor-pointer group" onclick="this.classList.toggle('truncate'); this.classList.toggle('whitespace-normal');" title="Clic para expandir o contraer el mensaje">
+                        <span class="font-bold ${ev.color === 'emerald' ? 'text-emerald-600 dark:text-lime' : 'text-blue-600 dark:text-cyan'}">${tipoEvento}${descripcionEvento ? ':' : ''}</span> 
+                        <span class="font-normal text-sm group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                            ${descripcionEvento}
+                        </span>
+                    </div>
                 </td>
-                <td class="px-6 py-4 text-right text-slate-500 dark:text-zinc-400 font-mono text-xs">${ev.autor}</td>
+                <td class="px-6 py-4 text-right text-slate-500 dark:text-zinc-400 font-mono text-xs truncate max-w-[100px] md:max-w-[150px]" title="${ev.autor}">
+                    ${ev.autor}
+                </td>
             </tr>
         `;
 
