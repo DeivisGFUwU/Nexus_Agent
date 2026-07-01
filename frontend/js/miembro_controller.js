@@ -40,10 +40,10 @@ const MiembroController = {
         const contenedorMensaje = document.getElementById('mensaje-onboarding');
         const teamId = DevAPI.getCurrentTeam(); // <--- Usamos el teamId
 
-        console.log(`📡 [GET] ${DevAPI.BASE_URL}/onboarding/${userId} - Solicitando contexto a la IA...`);
+        console.log(`📡 [GET] ${DevAPI.BASE_URL}/onboarding/${teamId} - Solicitando contexto a la IA...`);
 
         try {
-            const respuesta = await fetch(`${DevAPI.BASE_URL}/onboarding/${userId}`);
+            const respuesta = await fetch(`${DevAPI.BASE_URL}/onboarding/${teamId}`);
             if (!respuesta.ok) throw new Error(`HTTP Error: ${respuesta.status}`);
             
             const data = await respuesta.json();
@@ -95,7 +95,7 @@ const MiembroController = {
 
         } catch (error) {
             console.error("❌ Fallo en la extracción de telemetría:", error);
-            tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-500 font-mono text-xs">Error de conexión con el Backend (localhost:8000)</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-500 font-mono text-xs">Error de conexión con el Backend</td></tr>`;
         }
     },
 
