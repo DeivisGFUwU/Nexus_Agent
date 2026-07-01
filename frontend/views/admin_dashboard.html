@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusSync AI - Administración Global</title>
+    <!-- Anula la petición automática del favicon -->
+    <link rel="icon" href="data:,">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { base: '#0A0A0B', surface: '#121214', lime: '#D9FF00', cyan: '#22D3EE', border: '#27272A' }
+                } 
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="h-screen flex flex-col selection:bg-lime selection:text-slate-900 overflow-hidden bg-slate-50 text-slate-900 dark:bg-base dark:text-[#E4E4E7]">
+
+    <div class="flex flex-1 overflow-hidden w-full relative">
+        
+        <aside id="sidebar" class="w-64 border-r border-slate-200 bg-white dark:border-border dark:bg-base flex flex-col h-full z-20 shadow-md dark:shadow-[10px_0_30px_rgba(0,0,0,0.5)] transition-all duration-300">
+            <div onclick="toggleSidebar()" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800/30 h-20 shrink-0 flex items-center px-6 border-b border-slate-200 dark:border-border transition-colors group">
+                <svg class="w-7 h-7 text-emerald-500 dark:text-lime mr-3 shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <h1 class="sidebar-text text-xl font-bold tracking-tight text-slate-900 dark:text-white">Nexus<span class="text-emerald-500 dark:text-lime">Sync</span></h1>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar flex flex-col" id="sidebar-nav">
+                <p class="sidebar-text px-3 text-xs font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-2 mt-4">Organización</p>
+                <a href="#" onclick="AdminController.cambiarVista('administracion')" id="nav-administracion" class="flex items-center gap-3 px-3 py-2.5 bg-slate-100 text-slate-900 dark:bg-zinc-800/50 dark:text-white rounded-lg border border-slate-200 dark:border-border transition-colors relative group" title="Administración">
+                    <svg class="w-5 h-5 shrink-0 text-emerald-500 dark:text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    <span class="sidebar-text font-medium text-sm">Administración</span>
+                </a>
+                <a href="#" onclick="AdminController.cambiarVista('directorio')" id="nav-directorio" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-zinc-400 dark:hover:bg-zinc-800/30 dark:hover:text-white rounded-lg transition relative group" title="Directorio Global">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="sidebar-text font-medium text-sm">Directorio Global</span>
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-slate-200 dark:border-border shrink-0 transition-colors">
+                <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition justify-center lg:justify-start">
+                    <div class="w-8 h-8 shrink-0 rounded bg-slate-200 border border-slate-300 text-slate-700 dark:bg-zinc-800 dark:border-zinc-600 dark:text-lime flex items-center justify-center text-xs font-bold">ES</div>
+                    <div class="sidebar-text flex flex-col">
+                        <span class="text-xs font-bold text-slate-900 dark:text-white">Empresa Sys</span>
+                        <span class="text-[10px] text-slate-500 dark:text-zinc-500">NexusSync Enterprise</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar relative">
+            <div class="hidden dark:block absolute top-0 right-0 w-[500px] h-[500px] bg-lime opacity-[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+
+            <header class="h-20 shrink-0 px-10 flex items-center justify-between border-b border-slate-200 bg-white/90 dark:border-border dark:bg-base/95 backdrop-blur-md sticky top-0 z-40 shadow-sm transition-colors">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white" id="header-title">Administración Global</h2>
+                    <p class="text-sm text-slate-500 dark:text-zinc-400" id="header-subtitle">Gestiona los espacios de trabajo y accesos de tu organización.</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <span class="px-3 py-1.5 bg-emerald-100 text-emerald-700 dark:bg-lime/20 dark:border dark:border-lime dark:text-lime rounded-full text-xs font-bold transition-colors">Admin de Organización</span>
+                    <button onclick="toggleTheme()" class="w-10 h-10 rounded-full border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 flex items-center justify-center transition-colors">
+                        <svg class="w-5 h-5 hidden dark:block text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg class="w-5 h-5 block dark:hidden text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-10 max-w-6xl w-full mx-auto space-y-8 relative z-0">
+                
+                <section id="modulo-administracion" class="space-y-8 fade-in">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-panel p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-emerald-500 dark:border-l-lime">
+                            <div><p class="text-sm text-slate-500 dark:text-zinc-400 font-medium mb-1">Equipos Activos</p><h4 id="metric-equipos" class="text-3xl font-bold">--</h4></div>
+                            <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 dark:bg-lime/10 dark:text-lime flex items-center justify-center text-xl"><i class="fa-solid fa-network-wired"></i></div>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-blue-500 dark:border-l-cyan">
+                            <div><p class="text-sm text-slate-500 dark:text-zinc-400 font-medium mb-1">Horas Ahorradas</p><h4 id="metric-horas" class="text-3xl font-bold">--</h4></div>
+                            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 dark:bg-cyan/10 dark:text-cyan flex items-center justify-center text-xl"><i class="fa-solid fa-stopwatch"></i></div>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-indigo-500 dark:border-l-indigo-400">
+                            <div><p class="text-sm text-slate-500 dark:text-zinc-400 font-medium mb-1">Consultas IA</p><h4 id="metric-consultas" class="text-3xl font-bold">--</h4></div>
+                            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400 flex items-center justify-center text-xl"><i class="fa-solid fa-robot"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><div class="p-1.5 bg-slate-100 text-emerald-600 dark:bg-zinc-800 dark:text-cyan rounded-md"><i class="fa-solid fa-user-plus text-sm"></i></div> Invitar Integrantes</h3>
+                                <form id="form-invitar-integrante" class="flex flex-col gap-3">
+                                    <input type="email" id="input-email-invitacion" required placeholder="dev@empresa.com" class="w-full bg-white border border-slate-300 dark:bg-base dark:border-border p-2.5 rounded-lg focus:border-emerald-500 dark:focus:border-lime outline-none text-sm transition">
+                                    <div class="flex gap-2">
+                                        <select id="select-equipo-invitacion" required class="flex-1 bg-white border border-slate-300 dark:bg-base dark:border-border p-2.5 rounded-lg focus:border-emerald-500 dark:focus:border-lime outline-none text-sm transition">
+                                            <option value="" disabled selected>Asignar a un equipo...</option>
+                                            <option value="t-1">Core Frontend Team</option>
+                                            <option value="t-2">Backend AI Services</option>
+                                        </select>
+                                        <button type="submit" class="bg-slate-900 text-white dark:bg-white dark:text-base px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition">Enviar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between border-emerald-500/20 dark:border-lime/20 relative overflow-hidden">
+                            <div class="absolute -right-6 -top-6 w-24 h-24 bg-emerald-500/10 dark:bg-lime/10 blur-2xl rounded-full"></div>
+                            <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><div class="p-1.5 bg-slate-100 text-emerald-600 dark:bg-zinc-800 dark:text-lime rounded-md"><i class="fa-solid fa-link text-sm"></i></div> Enlace de Acceso Global</h3>
+                            <p class="text-sm text-slate-500 dark:text-zinc-400 mb-4">Requiere aprobación del administrador para asignar nodo.</p>
+                            <div class="flex items-center bg-white border border-slate-300 dark:bg-base dark:border-border rounded-lg p-1">
+                                <div class="flex-1 px-3 py-1.5 overflow-hidden text-ellipsis whitespace-nowrap text-slate-500 dark:text-zinc-500 font-mono text-xs">https://nexussync.ai/join/org-77a9f2</div>
+                                <button onclick="copiarEnlace()" class="bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 px-4 py-2 rounded-md font-medium text-xs transition border border-slate-200 dark:border-zinc-600">Copiar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl overflow-hidden">
+                        <div class="p-6 border-b border-slate-200 dark:border-border flex justify-between items-center bg-slate-50 dark:bg-surface/50">
+                            <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-server text-emerald-500 dark:text-lime"></i> Gestión de Espacios de Trabajo</h3>
+                            <button class="bg-slate-900 text-white dark:bg-lime dark:text-base px-3 py-1.5 rounded-lg font-bold text-xs hover:opacity-90 transition flex items-center gap-2"><i class="fa-solid fa-plus"></i> Nuevo Equipo</button>
+                        </div>
+                        <div id="lista-equipos" class="w-full bg-white dark:bg-base divide-y divide-slate-100 dark:divide-border">
+                            </div>
+                    </div>
+                </section>
+
+                <section id="modulo-directorio" class="hidden space-y-8 fade-in">
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-user-shield text-blue-500 dark:text-cyan"></i> Directorio de Administradores</h3>
+                                <p class="text-sm text-slate-500 dark:text-zinc-400 mt-1">Gestión de altos mandos de la organización.</p>
+                            </div>
+                            <button onclick="AdminController.crearAdminPrompt()" class="bg-slate-900 text-white dark:bg-cyan dark:text-base px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition flex items-center gap-2">
+                                <i class="fa-solid fa-plus"></i> Nuevo Admin
+                            </button>
+                        </div>
+                        <div class="border border-slate-200 dark:border-border rounded-xl overflow-hidden bg-white dark:bg-base">
+                            <table class="w-full text-left text-sm whitespace-nowrap">
+                                <thead class="bg-slate-50 border-b border-slate-200 dark:bg-surface dark:border-border text-slate-500 dark:text-zinc-400">
+                                    <tr><th class="px-6 py-4 font-semibold">Identidad</th><th class="px-6 py-4 font-semibold">Rol</th><th class="px-6 py-4 font-semibold">Estado</th><th class="px-6 py-4 font-semibold text-right">Acciones</th></tr>
+                                </thead>
+                                <tbody id="tabla-directorio" class="divide-y divide-slate-100 dark:divide-border">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="modulo-detalle-equipo" class="hidden space-y-8 fade-in">
+                    <div class="flex items-center gap-4">
+                        <button onclick="AdminController.cambiarVista('administracion')" class="w-10 h-10 rounded-full border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 flex items-center justify-center transition transition-transform hover:-translate-x-1"><i class="fa-solid fa-arrow-left"></i></button>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                                Nodo: <span id="detalle-nombre-equipo" class="text-emerald-500 dark:text-lime">Cargando...</span>
+                                <button onclick="AdminController.editarNombreEquipo()" class="text-sm text-slate-400 hover:text-emerald-500 transition"><i class="fa-solid fa-pen"></i></button>
+                            </h2>
+                            <p class="text-sm text-slate-500 dark:text-zinc-400">ID: <span id="detalle-id-equipo" class="font-mono text-xs">--</span></p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-panel p-5 rounded-xl border-l-2 border-l-blue-500 dark:border-l-cyan">
+                            <p class="text-xs text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Miembros Activos</p>
+                            <h4 id="detalle-metric-miembros" class="text-2xl font-bold text-slate-900 dark:text-white">--</h4>
+                        </div>
+                        <div class="glass-panel p-5 rounded-xl border-l-2 border-l-emerald-500 dark:border-l-lime">
+                            <p class="text-xs text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Consultas IA (Mes)</p>
+                            <h4 id="detalle-metric-consultas" class="text-2xl font-bold text-slate-900 dark:text-white">--</h4>
+                        </div>
+                        <div class="glass-panel p-5 rounded-xl border-l-2 border-l-purple-500 dark:border-l-purple-400">
+                            <p class="text-xs text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Horas Ahorradas</p>
+                            <h4 id="detalle-metric-ahorro" class="text-2xl font-bold text-slate-900 dark:text-white">--</h4>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl overflow-hidden">
+                        <div class="p-6 border-b border-slate-200 dark:border-border flex justify-between items-center bg-slate-50 dark:bg-surface/50">
+                            <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-users text-slate-600 dark:text-zinc-300"></i> Matriz de Integrantes</h3>
+                            <button class="bg-white border border-slate-300 text-slate-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:border-emerald-500 dark:hover:border-lime transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-plus"></i> Añadir Miembro</button>
+                        </div>
+                        <div class="w-full bg-white dark:bg-base overflow-x-auto">
+                            <table class="w-full text-left text-sm whitespace-nowrap">
+                                <thead class="bg-slate-50/50 dark:bg-zinc-900/50 text-slate-500 dark:text-zinc-500 border-b border-slate-100 dark:border-zinc-800/50">
+                                    <tr><th class="px-6 py-3 font-medium">Desarrollador</th><th class="px-6 py-3 font-medium">Asignación</th><th class="px-6 py-3 font-medium text-right">Operaciones</th></tr>
+                                </thead>
+                                <tbody id="tabla-miembros-equipo" class="divide-y divide-slate-100 dark:divide-zinc-800/50">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="border border-red-200 dark:border-red-900/30 bg-red-50 dark:bg-red-900/10 rounded-2xl p-6">
+                        <h3 class="font-bold text-lg text-red-600 dark:text-red-400 mb-2"><i class="fa-solid fa-triangle-exclamation"></i> Zona Crítica de Operaciones</h3>
+                        <p class="text-sm text-red-500/80 dark:text-red-400/70 mb-4">La suspensión detiene la ingesta RAG. La eliminación destruye todos los vectores asociados irreversiblemente.</p>
+                        <div class="flex gap-3">
+                            <button id="btn-suspender-equipo" class="bg-white border border-red-200 text-red-600 dark:bg-zinc-900 dark:border-red-900/50 dark:text-red-400 px-4 py-2 rounded-lg font-bold text-xs hover:bg-red-50 transition shadow-sm">Suspender Flujo IA</button>
+                            <button id="btn-eliminar-equipo" class="bg-red-600 text-white dark:bg-red-500/20 dark:border dark:border-red-500/50 dark:text-red-300 px-4 py-2 rounded-lg font-bold text-xs hover:bg-red-700 transition shadow-sm">Destruir Nodo</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 border border-slate-700 dark:bg-surface dark:border-border text-white px-5 py-3 rounded-lg shadow-2xl flex items-center gap-3 translate-y-[150%] opacity-0 pointer-events-none z-50 transition-all duration-300">
+        <div class="w-6 h-6 rounded-full bg-emerald-500/20 dark:bg-lime/20 flex items-center justify-center text-emerald-500 dark:text-lime"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>
+        <div><p class="text-sm font-bold">Notificación</p><p class="text-xs text-slate-300 dark:text-zinc-400">Mensaje del sistema.</p></div>
+    </div>
+
+    <script>
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const texts = document.querySelectorAll('.sidebar-text');
+            if (sidebar.classList.contains('w-64')) {
+                sidebar.classList.replace('w-64', 'w-20');
+                texts.forEach(el => el.classList.add('hidden'));
+            } else {
+                sidebar.classList.replace('w-20', 'w-64');
+                texts.forEach(el => el.classList.remove('hidden'));
+            }
+        }
+        function copiarEnlace() {
+            navigator.clipboard.writeText("https://nexussync.ai/join/org-77a9f2").then(() => {
+                mostrarToast("¡Enlace copiado!", "Listo para pegar en tu correo corporativo.");
+            });
+        }
+        function mostrarToast(titulo, mensaje) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('p.font-bold').innerText = titulo;
+            toast.querySelector('p.text-xs').innerText = mensaje;
+            toast.classList.remove('translate-y-[150%]', 'opacity-0');
+            toast.style.transform = "translateY(-10px)";
+            setTimeout(() => toast.style.transform = "translateY(0)", 150);
+            setTimeout(() => { toast.classList.add('translate-y-[150%]', 'opacity-0'); }, 3000);
+        }
+    </script>
+    <script src="js/admin_controller.js"></script>
+</body>
+</html>

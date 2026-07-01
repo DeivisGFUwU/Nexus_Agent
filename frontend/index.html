@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusSync AI - Portal de Acceso</title>
+    <!-- Anula la petición automática del favicon -->
+    <link rel="icon" href="data:,">
+    <!-- Importación de la Hoja de Estilos Maestra con Ruta Absoluta -->
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { base: '#0A0A0B', surface: '#121214', lime: '#D9FF00', cyan: '#22D3EE', border: '#27272A' }
+                } 
+            }
+        }
+    </script>
+</head>
+<body class="h-screen flex items-center justify-center bg-slate-50 text-slate-900 dark:bg-base dark:text-[#E4E4E7] overflow-hidden relative selection:bg-lime selection:text-slate-900">
+
+    <div class="hidden dark:block ambient-light"></div>
+
+    <div class="absolute top-6 right-6 z-20">
+        <button onclick="document.documentElement.classList.toggle('dark')" class="w-10 h-10 rounded-full border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 flex items-center justify-center transition-colors shadow-sm">
+            <i class="fa-solid fa-sun hidden dark:block text-lime"></i>
+            <i class="fa-solid fa-moon block dark:hidden text-slate-800"></i>
+        </button>
+    </div>
+
+    <!-- TARJETA DE AUTENTICACIÓN -->
+    <div class="glass-panel p-10 rounded-3xl w-full max-w-md shadow-2xl z-10 fade-in border-t-emerald-500/30 dark:border-t-lime/30 border-t-2 relative overflow-hidden">
+        
+        <div class="text-center mb-8">
+            <div class="w-14 h-14 bg-emerald-50 text-emerald-600 dark:bg-lime/10 dark:text-lime rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm border border-emerald-100 dark:border-lime/20">
+                <i class="fa-solid fa-bolt text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-1">Nexus<span class="text-emerald-500 dark:text-lime">Sync</span> AI</h1>
+            <p class="text-sm text-slate-500 dark:text-zinc-400">Ingresa a tu ecosistema de trabajo.</p>
+        </div>
+
+        <!-- FORMULARIO ENLAZADO A JS -->
+        <form id="form-login" class="space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-zinc-300 mb-2">CORREO ELECTRÓNICO</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-3 text-slate-400 dark:text-zinc-500"><i class="fa-regular fa-envelope"></i></span>
+                    <input type="email" id="input-email" required placeholder="dev@empresa.com" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-surface dark:border-zinc-700 dark:text-white p-3 pl-11 rounded-xl focus:border-emerald-500 dark:focus:border-lime outline-none text-sm transition-colors shadow-sm">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-zinc-300 mb-2">CONTRASEÑA</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-3 text-slate-400 dark:text-zinc-500"><i class="fa-solid fa-lock text-sm"></i></span>
+                    <input type="password" id="input-password" required placeholder="••••••••" value="123456" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-surface dark:border-zinc-700 dark:text-white p-3 pl-11 rounded-xl focus:border-emerald-500 dark:focus:border-lime outline-none text-sm transition-colors shadow-sm">
+                </div>
+            </div>
+
+            <!-- CONTENEDOR DE ERROR -->
+            <div id="login-error" class="hidden bg-red-100 text-red-600 dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-400 text-xs p-3 rounded-lg border border-red-200 flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation"></i> <span id="error-msg">Credenciales incorrectas.</span>
+            </div>
+
+            <button type="submit" id="btn-submit" class="w-full bg-slate-900 text-white dark:bg-lime dark:text-base font-bold py-3 rounded-xl mt-6 hover:opacity-90 dark:hover:brightness-110 transition shadow-lg dark:shadow-[0_0_15px_rgba(217,255,0,0.15)] flex justify-center items-center gap-2">
+                INICIAR SESIÓN
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </form>
+
+        <!-- PANEL DE CREDENCIALES DE PRUEBA ACTUALIZADO -->
+        <div class="mt-6 border-t border-slate-200 dark:border-border pt-4">
+            <p class="text-xs text-center text-slate-500 dark:text-zinc-500 font-mono mb-2">Entorno de Pruebas Activo (Pass: 123456)</p>
+            <div class="flex flex-col gap-1 text-xs text-center font-mono">
+                <span class="text-emerald-600 dark:text-lime">Admin: admin@empresa.com</span>
+                <span class="text-blue-600 dark:text-cyan">Líder: lider@empresa.com</span>
+                <span class="text-slate-600 dark:text-zinc-400">Desarrollador: dev@empresa.com</span>
+            </div>
+        </div>
+    </div>
+    <!-- ========================================== -->
+    <!-- IGNICIÓN DEL MOTOR SUPABASE                -->
+    <!-- ========================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://pabpdbesabufmspqdnnf.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhYnBkYmVzYWJ1Zm1zcHFkbm5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNjM5NjMsImV4cCI6MjA5NzczOTk2M30.hERlQUnEzvaN5hRYzqfrHB8Xv2Sale4ZkVapqR81nCk';
+        
+        // Extraemos la herramienta de creación del objeto global
+        const { createClient } = supabase;
+        
+        // Bautizamos a nuestra instancia con un identificador único (supabaseClient)
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+        console.log("⚡ Enlace con Supabase establecido (supabaseClient activo).");
+    </script>
+
+    <!-- ========================================== -->
+    <!-- EL CONTROLADOR DE AUTENTICACIÓN            -->
+    <!-- ========================================== -->
+    <script src="/js/auth.js"></script>
+</body>
+</html>

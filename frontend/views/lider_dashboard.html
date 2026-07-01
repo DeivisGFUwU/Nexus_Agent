@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusSync AI - Panel de Líder</title>
+    <!-- Anula la petición automática del favicon -->
+    <link rel="icon" href="data:,">
+    <!-- Importación de la Hoja de Estilos Maestra -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { base: '#0A0A0B', surface: '#121214', lime: '#D9FF00', cyan: '#22D3EE', border: '#27272A' }
+                } 
+            }
+        }
+    </script>
+</head>
+<body class="h-screen flex flex-col selection:bg-cyan selection:text-slate-900 overflow-hidden bg-slate-50 text-slate-900 dark:bg-base dark:text-[#E4E4E7]">
+
+    <div class="flex flex-1 overflow-hidden w-full relative">
+        
+        <!-- SIDEBAR EXCLUSIVO DEL LÍDER (Retráctil) -->
+        <aside id="sidebar" class="w-64 border-r border-slate-200 bg-white dark:border-border dark:bg-base flex flex-col h-full z-20 shadow-md dark:shadow-[10px_0_30px_rgba(0,0,0,0.5)] transition-all duration-300">
+            <div onclick="toggleSidebar()" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800/30 h-20 shrink-0 flex items-center px-6 border-b border-slate-200 dark:border-border transition-colors group">
+                <svg class="w-7 h-7 text-blue-500 dark:text-cyan mr-3 shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <h1 class="sidebar-text text-xl font-bold tracking-tight text-slate-900 dark:text-white">Nexus<span class="text-blue-500 dark:text-cyan">Sync</span></h1>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar flex flex-col" id="sidebar-nav">
+                <p class="sidebar-text px-3 text-xs font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-2 mt-4">Gestión de Nodo</p>
+                <a href="#" onclick="LiderController.cambiarVista('resumen')" id="nav-resumen" class="flex items-center gap-3 px-3 py-2.5 bg-slate-100 text-slate-900 dark:bg-zinc-800/50 dark:text-white rounded-lg border border-slate-200 dark:border-border transition-colors relative group" title="Resumen del Equipo">
+                    <i class="fa-solid fa-users w-5 text-center text-blue-500 dark:text-cyan shrink-0"></i>
+                    <span class="sidebar-text font-medium text-sm">Mi Equipo</span>
+                </a>
+                <a href="#" onclick="LiderController.cambiarVista('nodos')" id="nav-nodos" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-zinc-400 dark:hover:bg-zinc-800/30 dark:hover:text-white rounded-lg transition relative group" title="Conexión de APIs">
+                    <i class="fa-solid fa-plug w-5 text-center shrink-0"></i>
+                    <span class="sidebar-text font-medium text-sm">Integraciones IA</span>
+                </a>
+                <a href="#" onclick="LiderController.cambiarVista('auditoria')" id="nav-auditoria" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-zinc-400 dark:hover:bg-zinc-800/30 dark:hover:text-white rounded-lg transition relative group" title="Telemetría">
+                    <i class="fa-solid fa-satellite-dish w-5 text-center shrink-0"></i>
+                    <span class="sidebar-text font-medium text-sm">Auditoría RAG</span>
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-slate-200 dark:border-border shrink-0 transition-colors">
+                <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition justify-center lg:justify-start">
+                    <div class="w-8 h-8 shrink-0 rounded bg-blue-100 border border-blue-300 text-blue-700 dark:bg-cyan/20 dark:border-cyan/50 dark:text-cyan flex items-center justify-center text-xs font-bold">TL</div>
+                    <div class="sidebar-text flex flex-col">
+                        <span class="text-xs font-bold text-slate-900 dark:text-white">Tech Lead</span>
+                        <span class="text-[10px] text-slate-500 dark:text-zinc-500 font-mono">Core Frontend</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar relative">
+            <div class="hidden dark:block absolute top-0 right-0 w-[500px] h-[500px] bg-cyan opacity-[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+
+            <header class="h-20 shrink-0 px-10 flex items-center justify-between border-b border-slate-200 bg-white/90 dark:border-border dark:bg-base/95 backdrop-blur-md sticky top-0 z-40 shadow-sm transition-colors">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white" id="header-title">Centro de Operaciones</h2>
+                        <span class="items-center gap-1.5 px-2.5 py-1 bg-slate-100 border border-slate-300 text-slate-700 dark:bg-cyan/10 dark:border-cyan/30 dark:text-cyan rounded-md text-xs font-bold shadow-sm transition-colors flex">
+                            <i class="fa-solid fa-code-branch"></i> <span id="nombre-nodo-actual">Core Frontend</span>
+                        </span>
+                    </div>
+                    <p class="text-sm text-slate-500 dark:text-zinc-400 mt-1" id="header-subtitle">Auditoría del equipo y configuración de ingesta IA.</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <span class="px-3 py-1.5 bg-blue-100 text-blue-700 dark:bg-cyan/20 dark:border dark:border-cyan dark:text-cyan rounded-full text-xs font-bold transition-colors">Líder de Nodo</span>
+                    
+                    <button onclick="toggleTheme()" class="w-10 h-10 rounded-full border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-sun hidden dark:block text-cyan"></i>
+                        <i class="fa-solid fa-moon block dark:hidden text-slate-800"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-10 max-w-6xl w-full mx-auto space-y-8 relative z-0">
+                
+                <!-- VISTA 1: RESUMEN DEL EQUIPO Y CRUD MIEMBROS -->
+                <section id="modulo-resumen" class="space-y-8 fade-in">
+                    
+                    <div class="grid lg:grid-cols-3 gap-6">
+                        <!-- MÉTRICAS LOCALES -->
+                        <div class="lg:col-span-2 grid grid-cols-2 gap-4">
+                            <div class="glass-panel p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-blue-500 dark:border-l-cyan">
+                                <div><p class="text-xs text-slate-500 dark:text-zinc-400 font-medium mb-1 uppercase tracking-wider">Metatrabajo Ahorrado</p><h4 id="metric-ahorro" class="text-2xl font-bold">--</h4></div>
+                                <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 dark:bg-cyan/10 dark:text-cyan flex items-center justify-center"><i class="fa-solid fa-fire"></i></div>
+                            </div>
+                            <div class="glass-panel p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-purple-500 dark:border-l-purple-400">
+                                <div><p class="text-xs text-slate-500 dark:text-zinc-400 font-medium mb-1 uppercase tracking-wider">Vectores RAG</p><h4 id="metric-vectores" class="text-2xl font-bold">--</h4></div>
+                                <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400 flex items-center justify-center"><i class="fa-solid fa-database"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- SOLICITUDES PENDIENTES (CRUD) -->
+                        <div class="glass-panel p-5 rounded-2xl border-orange-200 dark:border-orange-500/30 h-full flex flex-col">
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-3 flex items-center justify-between">
+                                Solicitudes de Acceso <span id="contador-solicitudes" class="bg-orange-100 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400 text-xs px-2 py-0.5 rounded-full">0</span>
+                            </h3>
+                            <div id="lista-solicitudes" class="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar pr-2">
+                                <div class="text-center text-xs text-slate-400 dark:text-zinc-500 py-4"><i class="fa-solid fa-circle-notch fa-spin"></i> Obteniendo accesos...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MATRIZ DE INTEGRANTES (CRUD) -->
+                    <div class="glass-panel rounded-2xl overflow-hidden">
+                        <div class="p-6 border-b border-slate-200 dark:border-border flex justify-between items-center bg-slate-50 dark:bg-surface/50">
+                            <div>
+                                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-users-gear text-blue-500 dark:text-cyan"></i> Matriz de Integrantes</h3>
+                                <p class="text-sm text-slate-500 dark:text-zinc-400 mt-1">Audita el acceso y permisos de los desarrolladores en este nodo.</p>
+                            </div>
+                        </div>
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-white dark:bg-base text-slate-500 dark:text-zinc-500 border-b border-slate-100 dark:border-zinc-800/50">
+                                <tr><th class="px-6 py-3 font-medium">Desarrollador</th><th class="px-6 py-3 font-medium">Nivel de Acceso</th><th class="px-6 py-3 font-medium">Estado RAG</th><th class="px-6 py-3 font-medium text-right">Operaciones</th></tr>
+                            </thead>
+                            <tbody id="tabla-miembros" class="bg-white dark:bg-base divide-y divide-slate-100 dark:divide-zinc-800/50">
+                                <tr><td colspan="4" class="px-6 py-8 text-center text-slate-400 dark:text-zinc-600"><i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2"></i><p class="font-mono text-xs">Cargando topología de desarrolladores...</p></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- VISTA 2: CONFIGURACIÓN DE NODOS IA (CRUD INTEGRACIONES) -->
+                <section id="modulo-nodos" class="hidden space-y-8 fade-in">
+                    <div class="glass-panel p-8 rounded-2xl border-blue-200 dark:border-cyan/20 relative overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-32 h-32 bg-blue-100 dark:bg-cyan/10 blur-3xl rounded-full pointer-events-none"></div>
+                        
+                        <div class="mb-6">
+                            <h3 class="font-bold text-xl text-blue-600 dark:text-cyan flex items-center gap-2"><i class="fa-solid fa-key"></i> Inyección de Tokens RAG</h3>
+                            <p class="text-sm text-slate-500 dark:text-zinc-400 mt-1">Conecta las fuentes de verdad. El Agente indexará estos repositorios para generar contexto.</p>
+                        </div>
+                        
+                        <form id="form-integraciones" class="space-y-5 max-w-3xl">
+                            <div class="flex items-start gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-surface/50">
+                                <div class="text-2xl mt-1 text-slate-700 dark:text-white"><i class="fa-brands fa-github"></i></div>
+                                <div class="flex-1">
+                                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-1">GitHub Personal Access Token</label>
+                                    <input type="password" id="token-github" required placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-base dark:border-zinc-700 dark:text-white p-2.5 rounded-lg focus:border-blue-500 dark:focus:border-cyan outline-none font-mono text-sm transition shadow-sm">
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-surface/50">
+                                <div class="text-2xl mt-1 text-slate-700 dark:text-white"><i class="fa-solid fa-book-bookmark"></i></div>
+                                <div class="flex-1">
+                                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-1">Notion Internal Integration Secret</label>
+                                    <input type="password" id="token-notion" required placeholder="secret_xxxxxxxxxxxxxxxxxxxx" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-base dark:border-zinc-700 dark:text-white p-2.5 rounded-lg focus:border-blue-500 dark:focus:border-cyan outline-none font-mono text-sm transition shadow-sm">
+                                </div>
+                            </div>
+
+                            <div class="pt-4 flex justify-end">
+                                <button type="submit" class="bg-slate-900 text-white dark:bg-cyan dark:text-base font-bold px-6 py-2.5 rounded-lg hover:opacity-90 transition dark:shadow-[0_0_15px_rgba(34,211,238,0.2)] flex items-center gap-2">
+                                    <i class="fa-solid fa-shield-halved"></i> Encriptar y Guardar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- VISTA 3: AUDITORÍA Y TELEMETRÍA -->
+                <section id="modulo-auditoria" class="hidden space-y-6 fade-in">
+                    <div class="glass-panel p-6 rounded-2xl border-blue-200 dark:border-cyan/10">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-radar text-blue-500 dark:text-cyan"></i> Telemetría de Ingesta IA
+                                </h3>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-slate-200 dark:border-border rounded-xl overflow-hidden bg-white dark:bg-base">
+                            <table class="w-full text-left text-sm whitespace-nowrap">
+                                <thead class="bg-slate-50 dark:bg-surface text-slate-500 dark:text-zinc-400 border-b border-slate-200 dark:border-border">
+                                    <tr><th class="px-6 py-4 font-semibold">Timeline</th><th class="px-6 py-4 font-semibold">Plataforma</th><th class="px-6 py-4 font-semibold w-full">Registro Vectorial</th><th class="px-6 py-4 font-semibold text-right">Autor</th></tr>
+                                </thead>
+                                <tbody id="tabla-telemetria" class="divide-y divide-slate-100 dark:divide-border">
+                                    <!-- Inyectado por JS -->
+                                    <tr><td colspan="4" class="px-6 py-8 text-center text-slate-400 dark:text-zinc-600"><i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2"></i></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 border border-slate-700 dark:bg-surface dark:border-border text-white px-5 py-3 rounded-lg shadow-2xl flex items-center gap-3 translate-y-[150%] opacity-0 pointer-events-none z-50 transition-all duration-300">
+        <div class="w-6 h-6 rounded-full bg-blue-500/20 dark:bg-cyan/20 flex items-center justify-center text-blue-500 dark:text-cyan"><i class="fa-solid fa-check text-sm"></i></div>
+        <div><p class="text-sm font-bold">Notificación</p><p class="text-xs text-slate-300 dark:text-zinc-400">Mensaje del sistema.</p></div>
+    </div>
+
+    <script>
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const texts = document.querySelectorAll('.sidebar-text');
+            if (sidebar.classList.contains('w-64')) {
+                sidebar.classList.replace('w-64', 'w-20');
+                texts.forEach(el => el.classList.add('hidden'));
+            } else {
+                sidebar.classList.replace('w-20', 'w-64');
+                texts.forEach(el => el.classList.remove('hidden'));
+            }
+        }
+        function mostrarToast(titulo, mensaje) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('p.font-bold').innerText = titulo;
+            toast.querySelector('p.text-xs').innerText = mensaje;
+            toast.classList.remove('translate-y-[150%]', 'opacity-0');
+            toast.style.transform = "translateY(-10px)";
+            setTimeout(() => toast.style.transform = "translateY(0)", 150);
+            setTimeout(() => { toast.classList.add('translate-y-[150%]', 'opacity-0'); }, 3000);
+        }
+    </script>
+    <script src="js/lider_controller.js"></script>
+</body>
+</html>

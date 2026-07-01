@@ -1,0 +1,7 @@
+=====================
+	ngrok
+=====================
+
+Authtoken_ngrok: 2oIY04VzHXo4urajERH77yMi9f4_3dpzprpeDG2XSgcvMaJ2k
+
+Comando de encendido dentro de la carpeta Descargas/ngrok: ngrok http 8000

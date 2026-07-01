@@ -1,0 +1,72 @@
+/* Importación de las tipografías del sistema */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Urbanist:wght@600;700&display=swap');
+
+/* Transiciones Base de la Interfaz */
+body { 
+    transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+/* Efecto Glassmorphism Dinámico (Estructuras de Cristal) */
+.glass-panel, .glass { 
+    background: rgba(255, 255, 255, 0.8); 
+    backdrop-filter: blur(12px); 
+    border: 1px solid #E2E8F0; 
+    transition: all 0.3s ease;
+}
+
+.dark .glass-panel, .dark .glass { 
+    background: rgba(18, 18, 20, 0.6); 
+    border: 1px solid #27272A; 
+}
+
+/* Animaciones de Entrada (Termodinámica Visual) */
+.fade-in { 
+    animation: fadeIn 0.4s ease-in-out forwards; 
+}
+
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(10px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+/* Comportamiento Retráctil del Menú Lateral (Sidebar) */
+.sidebar-text { 
+    transition: opacity 0.2s ease, width 0.2s ease; 
+    overflow: hidden; 
+    white-space: nowrap; 
+}
+
+/* Animación del Fondo Abstracto (Portal de Login) */
+.ambient-light { 
+    position: absolute; 
+    width: 600px; 
+    height: 600px; 
+    background: radial-gradient(circle, rgba(217,255,0,0.05) 0%, rgba(0,0,0,0) 70%); 
+    border-radius: 50%; 
+    pointer-events: none; 
+    z-index: 0; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+}
+
+/* Scrollbar Dinámico y Minimalista */
+.custom-scrollbar::-webkit-scrollbar { 
+    width: 6px; 
+}
+.custom-scrollbar::-webkit-scrollbar-track { 
+    background: rgba(0,0,0,0.05); 
+    border-radius: 10px; 
+}
+.dark .custom-scrollbar::-webkit-scrollbar-track { 
+    background: rgba(0,0,0,0.2); 
+}
+.custom-scrollbar::-webkit-scrollbar-thumb { 
+    background: #cbd5e1; 
+    border-radius: 10px; 
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb { 
+    /* Cyan brillante (#22D3EE) para el modo oscuro, emulando el theme('colors.cyan') de Tailwind */
+    background: #22D3EE; 
+    opacity: 0.5; 
+}
