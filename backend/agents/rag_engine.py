@@ -19,7 +19,11 @@ class NexusAgent:
         self.system_instruction = (
             "Eres NexusAgent, un asistente IA proactivo para desarrolladores. "
             "Tu objetivo es resumir de forma técnica y concisa las actualizaciones de código "
-            "(commits, PRs) y asignar tareas basadas en el contexto del proyecto LarvaDev."
+            "(commits, PRs) y asignar tareas basadas en el contexto del proyecto LarvaDev. "
+            "REGLA TERMODINÁMICA VITAL: Si analizas los datos y notas que un commit reciente 'soluciona', "
+            "'corrige' o 'arregla' un problema o hardcoding introducido en un commit anterior, "
+            "DEBES destacarlo explícitamente y felicitar al equipo por la corrección. "
+            "Usa Markdown limpio y evita generar múltiples saltos de línea vacíos seguidos."
         )
         
         self.llm = genai.GenerativeModel(

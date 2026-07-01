@@ -12,6 +12,8 @@ const DevAPI = {
 };
 
 const MiembroController = {
+    // 🧠 Nueva variable para almacenar la firma del último commit
+    ultimoEvento: null,
     async init() {
         console.log("🧪 Iniciando calibración del ecosistema del Desarrollador...");
         
@@ -35,6 +37,45 @@ const MiembroController = {
         document.getElementById('avatar-iniciales').innerText = nombreBase.substring(0,2).toUpperCase();
     },
 
+    // 🧠 El Traductor Universal (Markdown -> HTML Tailwind) BLINDADO
+    formatearMensajeIA(texto) {
+        if (!texto) return '';
+        
+        let html = texto;
+        
+        // 1. Limpiar la basura espacial: Múltiples saltos de línea seguidos se reducen a máximo dos
+        html = html.replace(/\n{3,}/g, '\n\n');
+        
+        // 2. Negritas (Usamos [\s\S] para que no se rompa si Gemini mete un salto de línea dentro)
+        html = html.replace(/\*\*([\s\S]*?)\*\*/g, '<strong class="text-slate-900 dark:text-white">$1</strong>');
+        
+        // 3. Títulos (###)
+        html = html.replace(/### (.*)/g, '<h3 class="text-lg font-bold mt-4 mb-2 text-slate-900 dark:text-cyan">$1</h3>');
+        
+        // 4. Listas numeradas (Ej: 1. texto)
+        html = html.replace(/(?:^|\n)(\d+)\.\s+(.*)/g, '\n<div class="ml-4 mb-1 flex items-start gap-2"><span class="font-bold text-blue-500 dark:text-cyan shrink-0">$1.</span><span>$2</span></div>');
+        
+        // 5. Listas con viñetas (* texto)
+        html = html.replace(/(?:^|\n)\*\s+(.*)/g, '\n<div class="ml-4 mb-1 flex items-start gap-2"><i class="fa-solid fa-circle text-[6px] mt-2.5 text-blue-500 dark:text-cyan shrink-0"></i><span>$1</span></div>');
+        
+        // 6. Código en línea (`código`) - inline-block evita que se expanda a toda la pantalla
+        html = html.replace(/`(.*?)`/g, '<code class="bg-slate-100 dark:bg-zinc-800 text-pink-500 dark:text-pink-400 px-1.5 py-0.5 rounded text-xs font-mono inline-block">$1</code>');
+        
+        // 7. Líneas divisorias
+        html = html.replace(/---/g, '<hr class="border-slate-200 dark:border-border my-4">');
+
+        // 8. Convertir los saltos de línea restantes en <br>
+        html = html.replace(/\n/g, '<br>');
+        
+        // 9. Pulido final: quitar <br> generados inútilmente alrededor de bloques <div> o <h3>
+        html = html.replace(/<br><div/g, '<div');
+        html = html.replace(/<\/div><br>/g, '</div>');
+        html = html.replace(/<\/h3><br>/g, '</h3>');
+        html = html.replace(/<br>{2,}/g, '<br><br>'); // Máximo dos saltos visuales
+
+        return html;
+    },
+
     // 1. PETICIÓN REAL: Consumo de la IA Gemini
     async cargarMensajeProactivo() {
         const contenedorMensaje = document.getElementById('mensaje-onboarding');
@@ -47,9 +88,13 @@ const MiembroController = {
             if (!respuesta.ok) throw new Error(`HTTP Error: ${respuesta.status}`);
             
             const data = await respuesta.json();
-
-            // Inyección del texto procesado por Gemini 3.1 Flash Lite en el DOM
-            contenedorMensaje.innerHTML = data.agent_message;
+            // ⚡ RECALIBRACIÓN FÍSICA DEL CONTENEDOR ⚡
+            // 1. Destruimos la alineación horizontal que aplasta el texto
+            contenedorMensaje.classList.remove('flex', 'items-center', 'gap-3');
+            // 2. Aplicamos gravedad vertical para que los párrafos fluyan hacia abajo
+            contenedorMensaje.classList.add('flex', 'flex-col', 'gap-2');
+            // Pasamos el texto crudo por nuestro decodificador antes de inyectarlo
+            contenedorMensaje.innerHTML = this.formatearMensajeIA(data.agent_message);
             console.log("✅ [NexusAgent] Mensaje de Onboarding inyectado exitosamente.");
 
         } catch (error) {
@@ -84,13 +129,35 @@ const MiembroController = {
                 return;
             }
 
-            // Renderizamos los datos reales provenientes de la API
+            // Renderizamos los datos reales
             eventos.forEach(ev => {
-                // Asignamos colores según origen para mantener la termodinámica visual
                 ev.color = ev.origen.toLowerCase().includes('github') ? 'emerald' : 'blue';
                 this.inyectarFila(ev, false);
             });
             
+            // ⚡ LÓGICA DE DETECCIÓN DE ANOMALÍAS (El nuevo cerebro del radar)
+            const eventoMasReciente = eventos[0];
+            // Creamos una firma única combinando el tiempo y el texto del evento
+            const firmaActual = eventoMasReciente.tiempo + eventoMasReciente.evento;
+
+            if (this.ultimoEvento === null) {
+                // Primera carga: Solo guardamos la firma en la memoria sin llamar a la IA de nuevo
+                this.ultimoEvento = firmaActual;
+            } else if (this.ultimoEvento !== firmaActual) {
+                // ¡FÍSICA APLICADA! El último evento es distinto al que recordábamos.
+                console.log("⚡ ¡Nuevo pulso detectado en la matriz! Recalibrando el núcleo IA...");
+                this.ultimoEvento = firmaActual;
+                
+                // Ponemos el contenedor en estado de carga visualmente
+                document.getElementById('mensaje-onboarding').innerHTML = `
+                    <i class="fa-solid fa-circle-notch fa-spin text-blue-500 dark:text-cyan"></i>
+                    <span class="animate-pulse font-mono ml-2">Analizando nuevo commit con Gemini...</span>
+                `;
+                
+                // Despertamos a Gemini para que genere el nuevo resumen
+                this.cargarMensajeProactivo();
+            }
+
             console.log("✅ [Telemetría] Historial renderizado exitosamente.");
 
         } catch (error) {
